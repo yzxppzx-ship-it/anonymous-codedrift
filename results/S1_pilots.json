@@ -1,0 +1,16 @@
+{
+  "beta_sensitivity": {
+    "beta=10": 0.7055,
+    "beta=20": 0.6985,
+    "beta=50": 0.7092
+  },
+  "negative_sampling": {
+    "random_in_batch": 0.6993,
+    "hard_negative": 0.6847
+  },
+  "loss_ablation": {
+    "InfoNCE": 0.723,
+    "BCE": 0.634,
+    "MSE_collapsed_F1_0": 0.592
+  }
+}

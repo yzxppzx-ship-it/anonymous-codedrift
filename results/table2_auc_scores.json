@@ -1,0 +1,8 @@
+{
+  "Jaccard Overlap": 0.66,
+  "Unaligned Mapping": 0.51,
+  "SentenceBERT": 0.717,
+  "Zero-Shot Code Embedding (NightOwl-35M)": 0.742,
+  "Ours (CodeBERT)": 0.774,
+  "Ours (GraphCodeBERT)": 0.798
+}

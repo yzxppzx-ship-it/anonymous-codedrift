@@ -1,0 +1,28 @@
+{
+  "vs_NightOwl": {
+    "diff": 0.052,
+    "ci": [
+      0.018,
+      0.085
+    ],
+    "bootstrap_p": 0.004,
+    "delong_p": 0.015
+  },
+  "vs_Unfinetuned_GCB": {
+    "diff": 0.091,
+    "ci": [
+      0.021,
+      0.158
+    ],
+    "bootstrap_p": 0.015,
+    "delong_p": 0.009
+  },
+  "vs_SentenceBERT": {
+    "diff": 0.115,
+    "ci": [
+      0.065,
+      0.165
+    ],
+    "bootstrap_p": 0.0001
+  }
+}

@@ -1,0 +1,302 @@
+[
+    {
+        "project": "elasticsearch",
+        "historical_comment": "    /**\n     * Clears the caches for the given shard id if the shard is still allocated on this node\n     */",
+        "current_code": "    public void clearIndexShardCache(ShardId shardId, boolean queryCache, boolean fieldDataCache, boolean requestCache, String... fields) {\n        final IndexService service = indexService(shardId.getIndex());\n        if (service != null) {\n            IndexShard shard = service.getShardOrNull(shardId.id());\n            final boolean clearedAtLeastOne = service.clearCaches(queryCache, fieldDataCache, requestCache, fields);\n            if ((requestCache || (clearedAtLeastOne == false && fields.length == 0)) && shard != null) {\n                indicesRequestCache.clear(new IndexShardCacheEntity(shard));\n            }\n        }\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "\t/**\n\t * Convenience method for subclasses to create a specific {@code ExceptionTypeFilter}.\n\t * @see #getExceptionTypeFilter()\n\t */",
+        "current_code": "\tprotected ExceptionTypeFilter createExceptionTypeFilter(\n\t\t\tClass<? extends Throwable>[] includes, Class<? extends Throwable>[] excludes) {\n\n\t\treturn new ExceptionTypeFilter(Arrays.asList(includes), Arrays.asList(excludes));\n\t}",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "elasticsearch",
+        "historical_comment": "/**\n * Builder for {@link org.apache.lucene.queries.spans.SpanWithinQuery}.\n */",
+        "current_code": "    private static final ParseField BIG_FIELD = new ParseField(\"big\");\n    private static final ParseField LITTLE_FIELD = new ParseField(\"little\");\n\n    private final SpanQueryBuilder big;\n    private final SpanQueryBuilder little;\n\n    /**\n     * Query that returns spans from <code>little</code> that are contained in a spans from <code>big</code>.\n     * @param big clause that must enclose {@code little} for a match.",
+        "label": "DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "/**\n * Implementation of {@link PhysicalSlotRequestBulk} for {@link SlotSharingExecutionSlotAllocator}.\n *\n * <p>The bulk tracks the pending and fulfilled requests by the {@link ExecutionSlotSharingGroup}\n * for which the physical slot is being allocated. {@link SlotSharingExecutionSlotAllocator} calls\n * {@link #markFulfilled(ExecutionSlotSharingGroup, AllocationID)} to move a pending request to\n * fulfilled.\n *\n * <p>Additionally the bulk keeps execution lists for each {@link ExecutionSlotSharingGroup} they\n * belong to. If the {@link #cancel(Throwable)} method is called (due to fulfillabili",
+        "current_code": "    public SharingPhysicalSlotRequestBulk(\n            Map<ExecutionSlotSharingGroup, List<ExecutionVertexID>> executions,\n            Map<ExecutionSlotSharingGroup, ResourceProfile> pendingRequests,\n            BiConsumer<ExecutionVertexID, Throwable> logicalSlotRequestCanceller) {\n        this.executions = checkNotNull(executions);\n        this.pendingRequests = checkNotNull(pendingRequests);\n        this.fulfilledRequests = new HashMap<>();\n        this.logicalSlotRequestCanceller = checkNotNull(logicalSlotRequestCanceller);\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "/**\n * Default implementation of {@link ApiVersionStrategy} that delegates to the\n * configured version resolvers, version parser, and deprecation handler.\n *\n * @author Rossen Stoyanchev\n * @since 7.0\n */",
+        "current_code": "\tprivate final Set<Comparable<?>> supportedVersions = new TreeSet<>();\n\n\n\t/**\n\t * Create an instance.\n\t * @param versionResolvers one or more resolvers to try; the first non-null\n\t * value returned by any resolver becomes the value used\n\t * @param versionParser parser for raw version values\n\t * @param versionRequired whether a version is required; if a request\n\t * does not have a version, and a {@code defaultVersion} is not specified,",
+        "label": "DRIFT"
+    },
+    {
+        "project": "commons-lang",
+        "historical_comment": "        /**\n         * {@inheritDoc}\n         */",
+        "current_code": "        public int hashCode() {\n            return (style * 31 + locale.hashCode()) * 31 + timeZone.hashCode();\n        }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "\t/**\n\t * Create a (built) response with the given asynchronous response.\n\t * Parameter {@code asyncResponse} can be a\n\t * {@link CompletableFuture CompletableFuture&lt;ServerResponse&gt;} or\n\t * {@link Publisher Publisher&lt;ServerResponse&gt;} (or any\n\t * asynchronous producer of a single {@code ServerResponse} that can be\n\t * adapted via the {@link ReactiveAdapterRegistry}).\n\t * @param asyncResponse a {@code CompletableFuture<ServerResponse>} or\n\t * {@code Publisher<ServerResponse>}\n\t * @param timeout maximum time period to wait for before timing out\n\t * @return the asynchronous response\n\t *",
+        "current_code": "\tprivate static CompletableFuture<ServerResponse> toCompletableFuture(Object obj) {\n\t\tif (obj instanceof CompletableFuture<?> futureResponse) {\n\t\t\treturn (CompletableFuture<ServerResponse>) futureResponse;\n\t\t}\n\t\telse if (DefaultAsyncServerResponse.REACTIVE_STREAMS_PRESENT) {\n\t\t\tReactiveAdapterRegistry registry = ReactiveAdapterRegistry.getSharedInstance();\n\t\t\tReactiveAdapter publisherAdapter = registry.getAdapter(obj.getClass());\n\t\t\tif (publisherAdapter != null) {\n\t\t\t\tPublisher<ServerResponse> publisher = publisherAdapter.toPublisher(obj);\n\t\t\t\tReactiveAdapter futureAdapter = registry.getAdapter(CompletableFuture.class);\n\t\t\t\tif (futureAdapter != null) {\n\t\t\t\t\treturn (CompletableFuture<ServerResponse>) futureAdapter.fromPublisher(publisher);\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\tthrow new IllegalArgumentException(\"Asynchronous type not supported: \" + obj.getClass());\n\t}",
+        "label": "DRIFT"
+    },
+    {
+        "project": "elasticsearch",
+        "historical_comment": "/**\n * {@link AggregatorFunctionSupplier} implementation for {@link SampleLongAggregator}.\n * This class is generated. Edit {@code AggregatorFunctionSupplierImplementer} instead.\n */",
+        "current_code": "  public SampleLongAggregatorFunction aggregator(DriverContext driverContext,\n      List<Integer> channels) {\n    return new SampleLongAggregatorFunction(driverContext, channels, limit);\n  }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "commons-lang",
+        "historical_comment": "    /**\n     * Checks whether the given String is a parsable number.\n     *\n     * <p>\n     * Parsable numbers include those Strings understood by {@link Integer#parseInt(String)}, {@link Long#parseLong(String)}, {@link Float#parseFloat(String)}\n     * or {@link Double#parseDouble(String)}. This method can be used instead of catching {@link java.text.ParseException} when calling one of those methods.\n     * </p>\n     *\n     * <p>\n     * Scientific notation (for example, {@code \"1.2e-5\"}) and type suffixes (e.g., {@code \"2.0f\"}, {@code \"2.0d\"}) are supported\n     * as they are valid for {@link ",
+        "current_code": "    public static boolean isParsable(final String str) {\n        return accept(Double::parseDouble, str) || accept(Long::parseLong, str);\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "maven",
+        "historical_comment": "/**\n * The support class for goal implementations that requires valid/workable config.\n */",
+        "current_code": "    public int execute(EncryptContext context) throws Exception {\n        if (!validateConfiguration(context)) {\n            context.logger.error(messageBuilderFactory\n                    .builder()\n                    .error(\"Maven Encryption is not configured, run `mvnenc init` first.\")\n                    .build());\n            return ERROR;\n        }\n        return doExecute(context);\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "\t/**\n\t * Applies the Spring Java Format and Checkstyle plugins with the project conventions.\n\t * @param project the current project\n\t */",
+        "current_code": "\tprivate static void configureNoHttpPlugin(Project project) {\n\t\tproject.getPlugins().apply(NoHttpPlugin.class);\n\t\tNoHttpExtension noHttp = project.getExtensions().getByType(NoHttpExtension.class);\n\t\tnoHttp.setAllowlistFile(project.file(\"src/nohttp/allowlist.lines\"));\n\t\tnoHttp.getSource().exclude(\"**/test-output/**\", \"**/.settings/**\", \"**/.classpath\",\n\t\t\t\t\"**/.project\", \"**/.gradle/**\", \"**/node_modules/**\", \"**/spring-jcl/**\", \"buildSrc/build/**\");\n\t\tList<String> buildFolders = List.of(\"bin\", \"build\", \"out\");\n\t\tproject.allprojects(subproject -> {\n\t\t\tPath rootPath = project.getRootDir().toPath();\n\t\t\tPath projectPath = rootPath.relativize(subproject.getProjectDir().toPath());\n\t\t\tfor (String buildFolder : buildFolders) {\n\t\t\t\tPath innerBuildDir = projectPath.resolve(buildFolder);\n\t\t\t\tnoHttp.getSource().exclude(innerBuildDir + File.separator + \"**\");\n\t\t\t}\n\t\t});\n\t}",
+        "label": "DRIFT"
+    },
+    {
+        "project": "commons-lang",
+        "historical_comment": "    /**\n     * Inner class to allow StrBuilder to operate as a reader.\n     */",
+        "current_code": "        public void close() {\n            // do nothing\n        }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "\t/**\n\t * Set the {@link RetryPolicy} to use.\n\t * <p>Defaults to {@code RetryPolicy.withDefaults()}.\n\t * @param retryPolicy the retry policy to use\n\t * @see RetryPolicy#withDefaults()\n\t * @see RetryPolicy#withMaxRetries(long)\n\t * @see RetryPolicy#builder()\n\t */",
+        "current_code": "\tpublic void setRetryPolicy(RetryPolicy retryPolicy) {\n\t\tAssert.notNull(retryPolicy, \"RetryPolicy must not be null\");\n\t\tthis.retryPolicy = retryPolicy;\n\t}",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "JSON-java",
+        "historical_comment": "    /**\n     * Parses unquoted text from the JSON input. This could be the values true, false, or null, or it can be a number.\n     * Non-standard forms are also accepted. Characters are accumulated until the end of the text or a formatting\n     * character is reached.\n     *\n     * @param c The starting character.\n     * @return The parsed object.\n     * @throws JSONException If the parsed string is empty.\n     */",
+        "current_code": "    private Object getValidNumberOrBooleanFromObject(Object value) {\n        if (value instanceof Number || value instanceof Boolean) {\n            return value;\n        }\n\n        throw new JSONException(String.format(\"Value is not surrounded by quotes: %s\", value));\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "/**\n * A specialization of {@link FormattingConversionService} configured by default with\n * converters and formatters appropriate for most applications.\n *\n * <p>Designed for direct instantiation but also exposes the static {@link #addDefaultFormatters}\n * utility method for ad hoc use against any {@code FormatterRegistry} instance, just\n * as {@code DefaultConversionService} exposes its own\n * {@link DefaultConversionService#addDefaultConverters addDefaultConverters} method.\n *\n * <p>Automatically registers formatters for JSR-354 Money &amp; Currency and JSR-310 Date-Time\n * depending on the",
+        "current_code": "\tpublic DefaultFormattingConversionService() {\n\t\tthis(null, true);\n\t}",
+        "label": "DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "/**\n * StreamGraphHasher that works with user provided hashes. This is useful in case we want to set\n * (alternative) hashes explicitly, e.g. to provide a way of manual backwards compatibility between\n * versions when the mechanism of generating hashes has changed in an incompatible way.\n */",
+        "current_code": "    public Map<Integer, byte[]> traverseStreamGraphAndGenerateHashes(StreamGraph streamGraph) {\n        HashMap<Integer, byte[]> hashResult = new HashMap<>();\n        for (StreamNode streamNode : streamGraph.getStreamNodes()) {\n            generateHashesByStreamNodeId(streamNode.getId(), streamGraph, hashResult);\n        }\n\n        return hashResult;\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "\t/**\n\t * Return a single result object from the given Collection.\n\t * <p>Returns {@code Optional.empty()} if 0 result objects found;\n\t * throws an exception if more than 1 element found.\n\t * @param results the result Collection (can be {@code null})\n\t * @return the single optional result object, or {@code Optional.empty()} if none\n\t * @throws IncorrectResultSizeDataAccessException if more than one\n\t * element has been found in the given Collection\n\t * @since 6.1\n\t */",
+        "current_code": "\tpublic static <T> Optional<T> optionalResult(@Nullable Collection<? extends @Nullable T> results)\n\t\t\tthrows IncorrectResultSizeDataAccessException {\n\n\t\treturn Optional.ofNullable(singleResult(results));\n\t}",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "\t/**\n\t * This close methods tracks the termination of active threads if a concrete\n\t * {@link #setTaskTerminationTimeout task termination timeout} has been set.\n\t * Otherwise, it is not necessary to close this executor.\n\t * @since 6.1\n\t */",
+        "current_code": "\tpublic void close() {\n\t\tif (this.active) {\n\t\t\tthis.active = false;\n\t\t\tSet<Thread> threads = this.activeThreads;\n\t\t\tif (threads != null) {\n\t\t\t\tsynchronized (threads) {\n\t\t\t\t\ttry {\n\t\t\t\t\t\tif (!threads.isEmpty()) {\n\t\t\t\t\t\t\tthreads.wait(this.taskTerminationTimeout);\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t\tcatch (InterruptedException ex) {\n\t\t\t\t\t\tThread.currentThread().interrupt();\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tthreads.forEach(Thread::interrupt);\n\t\t\t}\n\t\t}\n\t}",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "  /**\n   * Visits a method instruction. A method instruction is an instruction that invokes a method.\n   *\n   * @param opcode the opcode of the type instruction to be visited. This opcode is either\n   *     INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC or INVOKEINTERFACE.\n   * @param owner the internal name of the method's owner class (see {@link\n   *     Type#getInternalName()}).\n   * @param name the method's name.\n   * @param descriptor the method's descriptor (see {@link Type}).\n   * @deprecated use {@link #visitMethodInsn(int, String, String, String, boolean)} instead.\n   */",
+        "current_code": "  public void visitMethodInsn(\n      final int opcode, final String owner, final String name, final String descriptor) {\n    int opcodeAndSource = opcode | (api < Opcodes.ASM5 ? Opcodes.SOURCE_DEPRECATED : 0);\n    visitMethodInsn(opcodeAndSource, owner, name, descriptor, opcode == Opcodes.INVOKEINTERFACE);\n  }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "maven",
+        "historical_comment": "/**\n * The \"init\" goal.\n */",
+        "current_code": "    public Init(MessageBuilderFactory messageBuilderFactory, SecDispatcher secDispatcher) {\n        super(messageBuilderFactory, secDispatcher);\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "elasticsearch",
+        "historical_comment": "/**\n * The rule handles fields that don't show up in the index mapping, but are used within the query. These fields can either be missing\n * entirely, or be present in the document, but not in the mapping (which can happen with non-dynamic mappings). The handling strategy is\n * driven by the {@link AnalyzerContext#unmappedResolution()} setting.\n * <p>\n * In the case of the former ones, the rule introduces {@code EVAL missing = NULL} commands (null-aliasing / null-Eval'ing).\n * <p>\n * In the case of the latter ones, it introduces field extractors in the source (where this supports it).\n * <p>\n ",
+        "current_code": "    private static LogicalPlan resolve(LogicalPlan plan, boolean load) {\n        if (plan.childrenResolved() == false) {\n            return plan;\n        }\n\n        LinkedHashMap<String, List<UnresolvedAttribute>> unresolvedByName = collectUnresolved(plan);\n        if (unresolvedByName.isEmpty()) {\n            return plan;\n        }\n\n        // One representative UA per name for nullify/load (which only need distinct field names).\n        LinkedHashSet<UnresolvedAttribute> unresolved = new LinkedHashSet<>(unresolvedByName.size());\n        // All UAs (multiple per name) for refreshPlan (which needs to refresh every occurrence in the plan).\n        Set<UnresolvedAttribute> allUnresolved = new HashSet<>();\n        for (List<UnresolvedAttribute> uas : unresolvedByName.values()) {\n            unresolved.add(uas.getFirst());\n            allUnresolved.addAll(uas);\n        }\n\n        var transformed = load ? load(plan, unresolved) : nullify(plan, unresolved);\n        return transformed == plan",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "/**\n * Implementation of {@link org.springframework.http.converter.HttpMessageConverter HttpMessageConverter}\n * that can read and write Smile data format (\"binary JSON\") using\n * <a href=\"https://github.com/FasterXML/jackson-dataformats-binary/tree/3.x/smile\">\n * the dedicated Jackson 3.x extension</a>.\n *\n * <p>By default, this converter supports {@code \"application/x-jackson-smile\"}\n * media type. This can be overridden by setting the\n * {@link #setSupportedMediaTypes supportedMediaTypes} property.\n *\n * <p>The default constructor loads {@link tools.jackson.databind.JacksonModule}s\n * found",
+        "current_code": "\tprivate static final MediaType DEFAULT_SMILE_MIME_TYPES = new MediaType(\"application\", \"x-jackson-smile\");\n\n\t/**\n\t * Construct a new instance with a {@link SmileMapper} customized with the",
+        "label": "DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "    /**\n     * Set avro codec for compression.\n     *\n     * @param codec avro codec.\n     */",
+        "current_code": "    public void writeRecord(E record) throws IOException {\n        dataFileWriter.append(record);\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "elasticsearch",
+        "historical_comment": "/**\n * Similar to {@link Variance}, but it is used to calculate the variance over a time series of values from the given field.\n */",
+        "current_code": "    public VarianceOverTime(\n        Source source,\n        @Param(\n            name = \"field\",\n            type = { \"double\", \"integer\", \"long\" },",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "commons-lang",
+        "historical_comment": "        /**\n         * Constructor\n         *\n         * @param upperBounds of this type\n         * @param lowerBounds of this type\n         */",
+        "current_code": "        private WildcardTypeImpl(final Type[] upperBounds, final Type[] lowerBounds) {\n            this.upperBounds = ObjectUtils.getIfNull(upperBounds, ArrayUtils.EMPTY_TYPE_ARRAY);\n            this.lowerBounds = ObjectUtils.getIfNull(lowerBounds, ArrayUtils.EMPTY_TYPE_ARRAY);\n        }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "maven",
+        "historical_comment": "/**\n * Signals a plugin which is not compatible with the current Maven runtime.\n */",
+        "current_code": "    public PluginIncompatibleException( Plugin plugin, String message )\n    {\n        this( plugin, message, null );\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "\t/**\n\t * Create an instance.\n\t */",
+        "current_code": "\tpublic NoResourceFoundException(HttpMethod httpMethod, String requestUri, String resourcePath) {\n\t\tsuper(\"No static resource \" + resourcePath + \" for request '\" + requestUri + \"'.\");\n\t\tthis.httpMethod = httpMethod;\n\t\tthis.resourcePath = resourcePath;\n\t\tthis.body = ProblemDetail.forStatusAndDetail(getStatusCode(), \"No static resource \" + resourcePath + \".\");\n\t}",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "/**\n * A {@link org.apache.flink.streaming.api.operators.StreamOperator} for executing keyed {@link\n * KeyedCoProcessFunction KeyedCoProcessFunction}.\n */",
+        "current_code": "    public KeyedCoProcessOperator(KeyedCoProcessFunction<K, IN1, IN2, OUT> keyedCoProcessFunction) {\n        this(keyedCoProcessFunction, OutputAdjustment.noAdjustment());\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "maven",
+        "historical_comment": "    /**\n     * Sets the transitive dependency artifacts that have been resolved/collected for this project.\n     * <strong>Warning:</strong> This is an internal utility method that is only public for technical reasons, it is not\n     * part of the public API. In particular, this method can be changed or deleted without prior notice and must not be\n     * used by plugins.\n     *\n     * @param artifacts The set of artifacts, may be {@code null}.\n     */",
+        "current_code": "    public void setResolvedArtifacts(Set<Artifact> artifacts) {\n        this.resolvedArtifacts = (artifacts != null) ? artifacts : Collections.emptySet();\n        this.artifacts = null;\n        this.artifactMap = null;\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "\t/**\n\t * Applies the Spring Java Format and Checkstyle plugins with the project conventions.\n\t * @param project the current project\n\t */",
+        "current_code": "\tprivate static void configureNoHttpPlugin(Project project) {\n\t\tproject.getPlugins().apply(NoHttpPlugin.class);\n\t\tNoHttpExtension noHttp = project.getExtensions().getByType(NoHttpExtension.class);\n\t\tnoHttp.setAllowlistFile(project.file(\"src/nohttp/allowlist.lines\"));\n\t\tnoHttp.getSource().exclude(\"**/test-output/**\", \"**/.settings/**\", \"**/.classpath\",\n\t\t\t\t\"**/.project\", \"**/.gradle/**\", \"**/node_modules/**\", \"**/spring-jcl/**\", \"buildSrc/build/**\");\n\t\tList<String> buildFolders = List.of(\"bin\", \"build\", \"out\");\n\t\tproject.allprojects(subproject -> {\n\t\t\tPath rootPath = project.getRootDir().toPath();\n\t\t\tPath projectPath = rootPath.relativize(subproject.getProjectDir().toPath());\n\t\t\tfor (String buildFolder : buildFolders) {\n\t\t\t\tPath innerBuildDir = projectPath.resolve(buildFolder);\n\t\t\t\tnoHttp.getSource().exclude(innerBuildDir + File.separator + \"**\");\n\t\t\t}\n\t\t});\n\t}",
+        "label": "DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "    /**\n     * Get native memory address wrapped by the given {@link ByteBuffer}.\n     *\n     * @param buffer {@link ByteBuffer} which wraps the native memory address to get\n     * @return native memory address wrapped by the given {@link ByteBuffer}\n     */",
+        "current_code": "    public static long getByteBufferAddress(ByteBuffer buffer) {\n        Preconditions.checkNotNull(buffer, \"buffer is null\");\n        Preconditions.checkArgument(\n                buffer.isDirect(), \"Can't get address of a non-direct ByteBuffer.\");\n\n        long offHeapAddress;\n        try {\n            offHeapAddress = UNSAFE.getLong(buffer, BUFFER_ADDRESS_FIELD_OFFSET);\n        } catch (Throwable t) {\n            throw new Error(\"Could not access direct byte buffer address field.\", t);\n        }\n\n        Preconditions.checkState(offHeapAddress > 0, \"negative pointer or size\");\n        Preconditions.checkState(\n                offHeapAddress < Long.MAX_VALUE - Integer.MAX_VALUE,\n                \"Segment initialized with too large address: \"\n                        + offHeapAddress\n                        + \" ; Max allowed address is \"\n                        + (Long.MAX_VALUE - Integer.MAX_VALUE - 1));\n\n        return offHeapAddress;\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "/**\n * Spring-specific subclass of the standard {@link HibernatePersistenceProvider}\n * from the {@code org.hibernate.jpa} package, adding support for\n * {@link SmartPersistenceUnitInfo#getManagedPackages()}.\n *\n * @author Juergen Hoeller\n * @author Joris Kuipers\n * @author Sebastien Deleuze\n * @since 4.1\n * @see Configuration#addPackage\n */",
+        "current_code": "\tpublic EntityManagerFactory createContainerEntityManagerFactory(PersistenceUnitInfo info, Map properties) {\n\t\tfinal List<String> mergedClassesAndPackages = new ArrayList<>(info.getManagedClassNames());\n\t\tif (info instanceof SmartPersistenceUnitInfo smartInfo) {\n\t\t\tmergedClassesAndPackages.addAll(smartInfo.getManagedPackages());\n\t\t}\n\t\treturn new EntityManagerFactoryBuilderImpl(\n\t\t\t\tnew PersistenceUnitInfoDescriptor(info) {\n\t\t\t\t\t@Override\n\t\t\t\t\tpublic List<String> getManagedClassNames() {\n\t\t\t\t\t\treturn mergedClassesAndPackages;\n\t\t\t\t\t}\n\t\t\t\t\t@Override\n\t\t\t\t\tpublic void pushClassTransformer(EnhancementContext enhancementContext) {\n\t\t\t\t\t\tif (!NativeDetector.inNativeImage()) {\n\t\t\t\t\t\t\tsuper.pushClassTransformer(enhancementContext);\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}, properties).build();\n\t}",
+        "label": "DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "/**\n * Register the necessary reflection hints so that the specified type can be\n * bound at runtime. Fields, constructors, properties, and record components\n * are registered, except for a set of types like those in the {@code java.}\n * package where just the type is registered. Types are discovered transitively\n * on properties and record components, and generic types are registered as well.\n *\n * @author Sebastien Deleuze\n * @since 6.0\n */",
+        "current_code": "\tpublic void registerReflectionHints(ReflectionHints hints, Type... types) {\n\t\tSet<Type> seen = new HashSet<>();\n\t\tfor (Type type : types) {\n\t\t\tregisterReflectionHints(hints, seen, type);\n\t\t}\n\t}",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "maven",
+        "historical_comment": "/**\n * PluginParameterException\n */",
+        "current_code": "    private static String format(List<Parameter> parameters) {\n        StringBuilder buffer = new StringBuilder(128);\n        if (parameters != null) {\n            for (Parameter parameter : parameters) {\n                if (!buffer.isEmpty()) {\n                    buffer.append(\", \");\n                }\n                buffer.append('\\'').append(parameter.getName()).append('\\'');\n            }\n        }\n        return buffer.toString();\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "    /**\n     * Get the maximum parallelism for this stream node.\n     *\n     * @return Maximum parallelism\n     */",
+        "current_code": "    public int getMaxParallelism() {\n        return maxParallelism;\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "commons-lang",
+        "historical_comment": "    /**\n     * Prepares an acquire operation. Checks for the current state and starts the internal timer if necessary. This method must be called with the lock of this\n     * object held.\n     */",
+        "current_code": "    private void prepareAcquire() {\n        if (isShutdown()) {\n            throw new IllegalStateException(\"TimedSemaphore is shut down.\");\n        }\n        if (task == null) {\n            task = startTimer();\n        }\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "commons-lang",
+        "historical_comment": "/**\n * An {@link Future} implementation that throws unchecked instead of checked exceptions.\n *\n * @param <V> The result type returned by this UncheckedFuture's {@link #get()} and {@link #get(long, TimeUnit)} methods.\n * @see Future\n * @since 3.13.0\n */",
+        "current_code": "    public V get() {\n        try {\n            return super.get();\n        } catch (final InterruptedException e) {\n            Thread.currentThread().interrupt();\n            throw new UncheckedInterruptedException(e);\n        } catch (final ExecutionException e) {\n            throw new UncheckedExecutionException(e);\n        }\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "elasticsearch",
+        "historical_comment": "/**\n * {@link AggregatorFunctionSupplier} implementation for {@link MinFloatAggregator}.\n * This class is generated. Edit {@code AggregatorFunctionSupplierImplementer} instead.\n */",
+        "current_code": "  public MinFloatAggregatorFunction aggregator(DriverContext driverContext,\n      List<Integer> channels) {\n    return new MinFloatAggregatorFunction(driverContext, channels);\n  }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "commons-lang",
+        "historical_comment": "    /**\n     * Gets a {@link Processor} object the given value {@link String}. The {@link String} must be like a value returned by the {@code \"os.arch\"} system\n     * property.\n     *\n     * @param value A {@link String} like a value returned by the {@code os.arch} System Property.\n     * @return A {@link Processor} when it exists, else {@code null}.\n     */",
+        "current_code": "    private static void init_PPC_32Bit() {\n        addProcessors(new Processor(Processor.Arch.BIT_32, Processor.Type.PPC), \"ppc\", \"power\", \"powerpc\", \"power_pc\", \"power_rs\");\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "elasticsearch",
+        "historical_comment": "    /**\n     * @param vector considered owned by the current block; must not be used in any other {@code Block}\n     */",
+        "current_code": "    public ElementType elementType() {\n        return vector.elementType();\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "maven",
+        "historical_comment": "/**\n *\n */",
+        "current_code": "    private Properties properties = new Properties();\n\n    @Override\n    public String getProperty(String key) {\n        return properties.getProperty(key);\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "elasticsearch",
+        "historical_comment": "    /**\n     * Wraps {@link BinaryDocValues} for the {@code _ignored_source} field to apply field-level security filtering.\n     * <p>\n     * Per-document values are decoded via {@link MultiValuedSortedBinaryDocValues} (which handles both\n     * {@link MultiValuedBinaryDocValuesField.SeparateCount} and {@link MultiValuedBinaryDocValuesField.IntegratedCount}\n     * formats), filtered through the FLS field automaton, and re-encoded in the\n     * {@link MultiValuedBinaryDocValuesField.IntegratedCount} format so that callers only observe field values\n     * the current user is authorised to see. R",
+        "current_code": "        public boolean advanceExact(int target) throws IOException {\n            filteredValue = null;\n            if (multiValues.advanceExact(target) == false) {\n                return false;\n            }\n\n            // iterate over all ignored-source entries for this document and apply FLS filtering\n            List<BytesRef> filteredValues = new ArrayList<>();\n            int count = multiValues.docValueCount();\n            for (int i = 0; i < count; i++) {\n                BytesRef value = multiValues.nextValue();\n                BytesRef filtered = ignoredSourceFormat.filterValue(value, v -> filter(v, filter, 0));\n                if (filtered != null) {\n                    // deep copy because nextValue() reuses an internal scratch buffer\n                    filteredValues.add(BytesRef.deepCopyOf(filtered));\n                }\n            }\n\n            if (filteredValues.isEmpty()) {\n                return false;\n            }\n\n            // re-encode surviving values into Inte",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "spring-framework",
+        "historical_comment": "/**\n * Intercept methods annotated with {@link CacheRemove}.\n *\n * @author Stephane Nicoll\n * @since 4.1\n */",
+        "current_code": "\tprivate void removeValue(CacheOperationInvocationContext<CacheRemoveOperation> context) {\n\t\tObject key = generateKey(context);\n\t\tCache cache = resolveCache(context);\n\t\tif (logger.isTraceEnabled()) {\n\t\t\tlogger.trace(\"Invalidating key [\" + key + \"] on cache '\" + cache.getName() +\n\t\t\t\t\t\"' for operation \" + context.getOperation());\n\t\t}\n\t\tdoEvict(cache, key, context.getOperation().isEarlyRemove());\n\t}",
+        "label": "DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "    /**\n     * Extracts the value (excluding null) of a given class from an expression assuming it is a\n     * {@link ValueLiteralExpression}.\n     *\n     * @param expression literal to extract the value from\n     * @param targetClass expected class to extract from the literal\n     * @param <V> type of extracted value\n     * @return extracted value or empty if could not extract value of given type\n     */",
+        "current_code": "    public static String stringValue(Expression expression) {\n        return ((ValueLiteralExpression) expression).getValueAs(String.class).orElse(null);\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "maven",
+        "historical_comment": "    /**\n     * Runs this mojo.\n     *\n     * @throws MojoExecutionException If any artifact could not be installed.\n     */",
+        "current_code": "    public void execute() throws MojoExecutionException {\n        try {\n            String url = \"file://\" + localRepoDir.toURL().getPath();\n\n            localRepository = repositoryFactory.createArtifactRepository(\n                    localRepository.getId(),\n                    url,\n                    new CustomRepositoryLayout(),\n                    localRepository.getSnapshots(),\n                    localRepository.getReleases());\n        } catch (Exception e) {\n            throw new MojoExecutionException(\"Failed to create custom local repository\", e);\n        }\n\n        super.execute();\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "commons-lang",
+        "historical_comment": "    /**\n     * Invokes a named {@code static} method whose parameter type matches the object type.\n     *\n     * <p>\n     * This method delegates the method search to {@link #getMatchingAccessibleMethod(Class, String, Class[])}.\n     * </p>\n     * <p>\n     * This method supports calls to methods taking primitive parameters\n     * via passing in wrapping classes. So, for example, a {@link Boolean} class\n     * would match a {@code boolean} primitive.\n     * </p>\n     *\n     * @param cls invoke static method on this class\n     * @param methodName get method with this name\n     * @param args use ",
+        "current_code": "    private static Method requireNonNull(final Method method, final Class<?> cls, final String methodName, final Class<?>[] parameterTypes)\n            throws NoSuchMethodException {\n        if (method == null) {\n            throw new NoSuchMethodException(String.format(\"No method: %s.%s(%s)\", cls.getName(), methodName,\n                    Stream.of(parameterTypes).map(ClassUtils::getName).collect(LangCollectors.joining(\", \"))));\n        }\n        return method;\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "/**\n * Template of a function argument. It can either be backed by a single or a group of {@link\n * DataType}s.\n */",
+        "current_code": "    private FunctionArgumentTemplate(\n            @Nullable DataType dataType,\n            @Nullable InputGroup inputGroup,\n            @Nullable Class<?> conversionClass) {\n        this.dataType = dataType;\n        this.inputGroup = inputGroup;\n        this.conversionClass = conversionClass;\n    }",
+        "label": "NO_DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "/**\n * A {@link StreamOperator} for executing keyed {@link ProcessFunction ProcessFunctions}.\n *\n * @deprecated Replaced by {@link KeyedProcessOperator} which takes {@code KeyedProcessFunction}\n */",
+        "current_code": "    public LegacyKeyedProcessOperator(ProcessFunction<IN, OUT> function) {\n        super(function);\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "flink",
+        "historical_comment": "/**\n * The lookup join handler which holds a {@link LookupJoinRunner} to process lookup for insert or\n * update_after record and directly process delete and update_before record via local state.\n */",
+        "current_code": "    private BinaryRowData initEmptyRow(int arity) {\n        BinaryRowData emptyRow = new BinaryRowData(arity);\n        int size = emptyRow.getFixedLengthPartSize();\n        byte[] bytes = new byte[size];\n        emptyRow.pointTo(MemorySegmentFactory.wrap(bytes), 0, size);\n        for (int index = 0; index < arity; index++) {\n            emptyRow.setNullAt(index);\n        }\n        return emptyRow;\n    }",
+        "label": "DRIFT"
+    },
+    {
+        "project": "elasticsearch",
+        "historical_comment": "/**\n * Returns a subset of the multivalued field using the start and end index values.\n */",
+        "current_code": "    public MvSlice(\n        Source source,\n        @Param(\n            name = \"field\",\n            type = {\n                \"boolean\",\n                \"cartesian_point\",\n                \"cartesian_shape\",\n                \"date\",\n                \"date_nanos\",\n                \"double\",\n                \"geo_point\",\n                \"geo_shape\",\n                \"geohash\",\n                \"geotile\",\n                \"geohex\",\n                \"integer\",\n                \"ip\",\n                \"keyword\",\n                \"long\",\n                \"text\",\n                \"unsigned_long\",\n                \"version\" },",
+        "label": "DRIFT"
+    }
+]
