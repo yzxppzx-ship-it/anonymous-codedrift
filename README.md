@@ -87,7 +87,7 @@ Run python 2_finetune_infonce.py.
 Run python 4_label_budget_curve.py to extract features, then python 3_eval_zeroshot.py to generate the prediction scores.
 
 Data Availability
+We provide a strictly balanced 50-pair sample in `data/benchmark_sample_50.json` for format verification. The full 380-pair annotated benchmark will be publicly released upon paper acceptance to protect the integrity of the test set.
 
-We provide a strictly balanced 50-pair sample in data/benchmark_sample_50.json for format verification. The full 380-pair annotated benchmark will be publicly released upon paper acceptance to protect the integrity of the test set.
 ----------
 This repository has been anonymized for peer review.
