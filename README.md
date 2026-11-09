@@ -4,11 +4,13 @@ This repository contains the source code, data samples, and experimental results
 
 Paper Title: An Exploratory Empirical Study of Label-Free Contrastive Alignment for Temporal Code-Comment Drift Detection
 
-**Reviewer's Tip (Instant Reproduction):** 
-To save your time and computational resources, we have pre-computed all the heavy `.npy` feature files and prediction scores. **You do NOT need a GPU or network connection to verify our statistical tests.** You can directly run `3_eval_zeroshot.py` and `5_noise_simulation.py` in a few seconds to see the exact numbers reported in the paper.
+**Model Weights:** The fine-tuned model weights are excluded from the main branch due to GitHub's file size limit. You can download them directly from the **[Releases](https://github.com/yzxppzx-ship-it/anonymous-codedrift/releases/tag/v1.0.0)** page.
+
+**Reviewer's Tip (Instant Reproduction):** To save your time and computational resources, we have pre-computed all the heavy `.npy` feature files and prediction scores. **You do NOT need a GPU or network connection to verify our statistical tests.** You can directly run `3_eval_zeroshot.py` and `5_noise_simulation.py` in a few seconds to see the exact numbers reported in the paper.
 
 Repository Structure
 
+```text
 Anonymous_CodeDrift/
 ├── README.md                     <-- This file
 ├── requirements.txt              <-- Python dependencies
@@ -22,8 +24,8 @@ Anonymous_CodeDrift/
 │   ├── temporal_benchmark_candidates.json <-- Full mined candidate pool
 │   └── README.md                 <-- Data directory description
 │
-├── finetuned_model/              <-- Fine-tuned CodeBERT weights
-├── graphcodebert_finetuned/      <-- Fine-tuned GraphCodeBERT weights
+├── finetuned_model/              <-- Fine-tuned CodeBERT weights (Available in Releases)
+├── graphcodebert_finetuned/      <-- Fine-tuned GraphCodeBERT weights (Available in Releases)
 │
 ├── results/
 │   ├── README.md                 <-- Description of the raw result files
@@ -47,43 +49,44 @@ Anonymous_CodeDrift/
     ├── 3_eval_zeroshot.py        <-- Script for Zero-shot and statistical tests
     ├── 4_label_budget_curve.py   <-- Script for Label Efficiency analysis
     └── 5_noise_simulation.py     <-- Script for Label Noise simulation
-
+```
 Environment Setup
 
-We recommend using Python 3.8+. 
+We recommend using Python 3.8+.
 To install the required packages, run:
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 Reproduction Guide for Reviewers
 
-**Important:** Please make sure to change into the `scripts` directory before running the Python codes, as the file paths are hardcoded as `../data/` and `../results/`.
+Important: Please make sure to change into the scripts directory before running the Python codes, as the file paths are hardcoded as ../data/ and ../results/.
 
 3.1 Fast Reproduction (No GPU Required)
-Since all feature files and prediction scores (`.npy`) are already provided in the `results/` folder, you can verify our claims instantly:
+Since all feature files and prediction scores (.npy) are already provided in the results/ folder, you can verify our claims instantly:
 
-- Reproduce Table 2 and Table 3 (Statistical Tests):
-  python 3_eval_zeroshot.py
-  *(This will instantly load the `.npy` scores and output the exact DeLong/Bootstrap p-values)*
+Reproduce Table 2 and Table 3 (Statistical Tests):
+python 3_eval_zeroshot.py
+(This will instantly load the .npy scores and output the exact DeLong/Bootstrap p-values)
 
-- Reproduce Figure 4 (Label Budget Curves):
-  python 4_label_budget_curve.py
-  *(This will use the pre-computed features to plot the budget curve)*
+Reproduce Figure 4 (Label Budget Curves):
+python 4_label_budget_curve.py
+(This will use the pre-computed features to plot the budget curve)
 
-- Reproduce Table 4 (Label Noise Simulation):
-  python 5_noise_simulation.py
-  *(This will run the noise simulation instantly)*
+Reproduce Table 4 (Label Noise Simulation):
+python 5_noise_simulation.py
+(This will run the noise simulation instantly)
 
 3.2 Full Retraining from Scratch (Optional)
 If you wish to retrain the models from scratch and regenerate all files:
 
-- CodeSearchNet Dataset: Place your sampled `csn_java_100k.json` in the `data/` folder for fine-tuning. (You can sample it from the official CodeSearchNet Java subset).
-- Full Mined Candidates: Run `python 1_extract_candidates.py`.
-- Model Weights: Run `python 2_finetune_infonce.py`. This will fine-tune both CodeBERT and GraphCodeBERT and output weights to `../finetuned_model` and `../graphcodebert_finetuned`.
-- Features and Scores: Run `python 4_label_budget_curve.py` to extract features, then `python 3_eval_zeroshot.py` to generate the prediction scores.
+Place your sampled csn_java_100k.json in the data/ folder.
+
+Run python 1_extract_candidates.py.
+
+Run python 2_finetune_infonce.py.
+
+Run python 4_label_budget_curve.py to extract features, then python 3_eval_zeroshot.py to generate the prediction scores.
 
 Data Availability
-
-We provide a strictly balanced 50-pair sample in `data/benchmark_sample_50.json` for format verification. The full 380-pair annotated benchmark will be publicly released upon paper acceptance to protect the integrity of the test set.
-
----
+We provide a strictly balanced 50-pair sample in data/benchmark_sample_50.json for format verification. The full 380-pair annotated benchmark will be publicly released upon paper acceptance to protect the integrity of the test set.
+----------
 This repository has been anonymized for peer review.
